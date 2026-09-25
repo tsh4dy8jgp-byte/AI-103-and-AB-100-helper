@@ -12,6 +12,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "audit:questions": "node --experimental-strip-types --experimental-specifier-resolution=node scripts/audit-question-bank.mjs",
     "audit:rotation": "node --experimental-strip-types scripts/audit-question-rotation.mjs",
+    "audit:sessions": "node --experimental-strip-types scripts/audit-session-composition.mjs",
     "build:learn-map": "node --experimental-strip-types scripts/build-learn-map.mjs"
   },
   "dependencies": {

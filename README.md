@@ -1,9 +1,9 @@
 # Northstar Exam Lab
 
-A local practice facility for two Microsoft certifications, with 598 original questions and 24 complete case studies.
+A local practice facility for two Microsoft certifications, with 774 original questions and 24 complete case studies of six to eight questions each.
 
-- **AI-103 — Developing AI Apps and Agents on Azure.** 350 questions across the core bank, a Foundry SDK track, a Copilot Studio track, and 12 case studies.
-- **AB-100 — Agentic AI Business Solutions Architect.** 248 architecture and judgment questions across Dynamics 365, Power Platform, Copilot Studio, Microsoft 365 Copilot, and Microsoft Foundry, with 12 case studies.
+- **AI-103 — Developing AI Apps and Agents on Azure.** 438 questions across the core bank, a Foundry SDK track, a Copilot Studio track, and 12 case studies.
+- **AB-100 — Agentic AI Business Solutions Architect.** 336 architecture and judgment questions across Dynamics 365, Power Platform, Copilot Studio, Microsoft 365 Copilot, and Microsoft Foundry, with 12 case studies.
 
 Switch exams with the **AI-103 / AB-100** control in the top bar. Each exam keeps its own domains, weighting, case studies, session history, and analytics.
 
@@ -22,22 +22,36 @@ Open the local address printed in the terminal (normally `http://localhost:3000`
 
 - **Real** delays all correctness feedback until the exam is submitted.
 - **Review** explains each answer immediately after it is checked.
-- **Full** runs 50 questions in 100 minutes with two case studies.
+- **Full** runs 45–52 questions in 100 minutes, as the real exams vary in length: a weighted block of standalone questions followed by one case study of six to eight questions.
 - **Short** runs 25 questions in 50 minutes with one case study.
-- **Case Studies · Full** runs six complete scenario sections (24 questions) in 90 minutes.
-- **Case Studies · Short** runs three complete scenario sections (12 questions) in 45 minutes.
+- **Case Studies · Full** runs four complete scenario sections (24–32 questions) in 90 minutes.
+- **Case Studies · Short** runs two complete scenario sections (12–16 questions) in 45 minutes.
 - **Foundry SDK · Full** selects 40 of 80 dedicated questions in 70 minutes.
 - **Foundry SDK · Short** selects 20 of 80 dedicated questions in 35 minutes.
 - **Copilot Studio · Full** selects 24 of 48 dedicated questions in 40 minutes.
 - **Copilot Studio · Short** selects 12 of 48 dedicated questions in 20 minutes.
 
+## Question types and scoring
+
+Both exams mix the item formats the real exams use:
+
+- **Multiple choice** — one answer of four, or one or two answers of five. The instruction says how many to select.
+- **Drag and drop** — place values onto targets (each value may be used once or not at all, unless the item says otherwise), or arrange actions in order. Tiles can be dragged, or selected and then placed with a click or the keyboard, which also works on touch screens.
+- **Dropdown gap-fill** — choose from a list in each gap of a statement or a code listing (Python, JSON).
+
+Every exam simulation draws a minimum number of each interactive format into its standalone block (Full: 6 multiple-choice-of-five, 5 drag-and-drop, 5 dropdown; Short: 3/2/2), and every case study contains at least one drag-and-drop and one dropdown item.
+
+Scoring follows Microsoft's convention for multi-part items: **each correct selection, target, or gap is worth one point**, so an item can be partially correct. The session score is points earned divided by points possible, and domain and objective analytics are reported in points. The results screen shows your answer and the correct one for every part.
+
+Case studies present **background, audience, existing environment, use cases, requirements, and constraints**, and their questions depend on those details.
+
 ## AB-100 track
 
 AB-100 is a solution-architect exam, so its questions ask for recommendations and design judgment rather than implementation detail: agent suitability, grounding readiness, build-versus-buy, return on investment, Dynamics 365 and Microsoft 365 Copilot configuration, extensibility, application lifecycle management, and governance.
 
-Sessions are weighted to the published domains — Plan 25–30%, Design 25–30%, Deploy 40–45% — and the nine case studies are business scenarios (manufacturing, insurance, retail, health, logistics, banking, public sector, professional services, and utilities) with the same locked-section behavior as the AI-103 cases.
+Sessions are weighted to the published domains — Plan 25–30%, Design 25–30%, Deploy 40–45% — and the twelve case studies are business scenarios (manufacturing, insurance, retail, health, logistics, banking, public sector, professional services, utilities, education, hospitality, and construction) with the same locked-section behavior as the AI-103 cases.
 
-Every one of the 74 published bullets has at least two questions behind it and most have three or more, averaging 3.4, so repeated sessions keep drawing fresh items. Session composition is controlled by the per-domain targets in `components/exam-app.tsx`, not by the bank's own domain split, which is deliberately deeper in Design where the outline has the most bullets.
+Every one of the 74 published bullets has at least two questions behind it, averaging 4.5, so repeated sessions keep drawing fresh items. Session composition is controlled by each exam's published domain weights, applied in `lib/session-composer.ts`, not by the bank's own domain split, which is deliberately deeper in Design where the outline has the most bullets.
 
 ## Learn Map — open-book navigation
 
@@ -70,7 +84,7 @@ A filter box searches terms and definitions together, so "residency" finds both 
 
 Every question in every bank cites the objective it tests: the study-guide domain, sub-skill, and bullet, verbatim, plus a Microsoft Learn link for the feature under test. The citation appears once the answer is revealed, never before it, so it cannot narrow the choices while the question is open.
 
-The published outlines are held as data in `lib/ai103-syllabus.ts` (64 bullets) and `lib/ab100-syllabus.ts` (74 bullets). AI-103 citations live in `lib/question-references.ts`; AB-100 citations are inline in `lib/ab100-questions.ts`. **All 64 AI-103 bullets and all 74 AB-100 bullets are covered by at least one question.** The content audit fails if any question lacks a citation, if a cited bullet no longer matches the published outline, if a cited sub-skill does not belong to its domain, or if a documentation link is not a Microsoft Learn URL.
+The published outlines are held as data in `lib/ai103-syllabus.ts` (64 bullets) and `lib/ab100-syllabus.ts` (74 bullets). The original AI-103 core bank's citations live in `lib/question-references.ts`; the interactive-format banks (`lib/*-format-questions.ts`, `lib/*-case-extensions.ts`) and the AB-100 bank cite inline. **All 64 AI-103 bullets and all 74 AB-100 bullets are covered by at least one question.** The content audit fails if any question lacks a citation, if a cited bullet no longer matches the published outline, if a cited sub-skill does not belong to its domain, or if a documentation link is not a Microsoft Learn URL.
 
 ## Claude questions
 
@@ -93,19 +107,19 @@ Two focused session types follow from that:
 - **Drill my weakest objectives** — draws only from questions testing your eight weakest bullets.
 - **Practice what I got wrong** — resurfaces questions you previously answered incorrectly.
 
-A focused session ignores tracks and domain weighting, and says so in a banner on the setup screen with a one-click way to clear it. Focus is session intent, not a saved preference, so it never persists silently across reloads. Attempts recorded before this feature existed still appear in history and are simply excluded from the objective view. Question selection follows the published AI-103 domain weighting and always favors questions not yet selected on this device. Once a pool is exhausted, its least-recently seen questions rotate back in first. A session is reserved as soon as it starts, so leaving midway cannot produce the same batch on the next run. The complete, bounded question-ID history is retained so switching exams or tracks cannot evict useful rotation data.
+A focused session ignores tracks and domain weighting, and says so in a banner on the setup screen with a one-click way to clear it. Focus is session intent, not a saved preference, so it never persists silently across reloads. Attempts recorded before this feature existed still appear in history and are simply excluded from the objective view. Question selection follows each exam's published domain weighting and always favors questions not yet selected on this device. Once a pool is exhausted, its least-recently seen questions rotate back in first. A session is reserved as soon as it starts, so leaving midway cannot produce the same batch on the next run. The complete, bounded question-ID history is retained so switching exams or tracks cannot evict useful rotation data.
 
-The dedicated Case Studies track presents each organization as a complete four-question section with background, existing environment, requirements, and constraints. Answers can be reviewed within the current case, but a submitted case is locked and cannot be reopened during that attempt.
+The dedicated Case Studies track presents each organization as a complete section of six to eight questions with background, audience, existing environment, use cases, requirements, and constraints. Answers can be reviewed within the current case, but a submitted case is locked and cannot be reopened during that attempt.
 
 The core bank emphasizes Microsoft Foundry, Azure AI Search, Foundry Models deployment types, managed identity and RBAC, Application Insights/OpenTelemetry, Azure AI Content Safety, Azure Speech, Azure Translator, image and video workflows, and Azure Content Understanding. The specialty banks cover Foundry SDK 2.x clients and endpoints, the Responses API, agents, tools, evaluations, tracing, plus Copilot Studio orchestration, knowledge, topics, authentication, governance, evaluation, and ALM. Most questions require an implementation or architecture decision rather than simple service recognition.
 
-Every question names the Azure service, SDK, resource, or configuration surface under test. Answer sets use parallel, plausible Azure configurations so that verbosity does not reveal the key. The automated content audit enforces Azure specificity, unique prompts, balanced answer positions, case completeness, correct-versus-distractor length parity, a valid skills-measured citation with a Microsoft Learn link on every question, and that every explanation engages the wrong options rather than restating the keyed answer.
+Every question names the Azure service, SDK, resource, or configuration surface under test. Answer sets use parallel, plausible Azure configurations so that verbosity does not reveal the key. The automated content audit enforces Azure specificity, unique prompts, balanced answer positions (including dropdown keys), case completeness (six to eight questions, every narrative field, and both interactive formats), well-formed drag-and-drop and dropdown items, a minimum depth of each format per exam, correct-versus-distractor length parity, a valid skills-measured citation with a Microsoft Learn link on every question, and that every explanation engages the wrong options rather than restating the keyed answer.
 
 ## Explanations
 
 Every explanation does two jobs: it states the principle that makes the keyed answer correct, and it says why the tempting wrong options fail. Where the options are short and parallel it distinguishes all three; where one option is the clear bait it names that one specifically.
 
-The audit measures this as the share of questions whose explanation uses at least two terms drawn from the wrong options, reported per bank, and fails the build outright on any explanation that engages them not at all. All 598 questions currently pass the engagement gate. Questions whose distractors are permutations of the keyed answer's own words are exempt by rule rather than by allowlist, since the measure is meaningless there.
+The audit measures this as the share of questions whose explanation uses at least two terms drawn from the wrong options, reported per bank, and fails the build outright on any explanation that engages them not at all. All 774 questions currently pass the engagement gate; for drag-and-drop and dropdown items, unused tiles and wrong list options count as the distractors. Questions whose distractors are permutations of the keyed answer's own words are exempt by rule rather than by allowlist, since the measure is meaningless there.
 
 ## Local data
 
@@ -118,7 +132,10 @@ npm run lint
 npx tsc --noEmit
 npm run audit:questions
 npm run audit:rotation
+npm run audit:sessions
 npm run build
 ```
+
+`audit:sessions` composes 500 sessions per exam and length through the same code the app uses, and checks the 45–52 range, the single contiguous case study, the format minimums, and domain shares within five points of the published weights. It also unit-tests partial-credit grading.
 
 The question bank contains original practice material. It does not contain live exam items or exam dumps.

@@ -3,15 +3,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LEARN_MAP, LEARN_RULES, LEARN_BUDGET, LEARN_TRIAGE, LEARN_TAB_STRATEGY, LEARN_DONT_BOTHER } from "@/lib/learn-map";
 import { GLOSSARY, GLOSSARY_TERM_COUNT } from "@/lib/glossary";
-import { prioritizeUnseen, prioritizeUnseenCases } from "@/lib/question-rotation";
-import { AB100_CASE_STUDIES, AB100_CASE_STUDY_IDS, AB100_DOMAINS, AB100_QUESTIONS, CASE_STUDIES, CASE_STUDY_IDS, CLAUDE_QUESTIONS, CLAUDE_QUESTIONS_BY_COLLECTION, ALL_QUESTIONS, COPILOT_STUDIO_QUESTIONS, CORE_QUESTIONS, DOMAINS, EXAMS, FOUNDRY_SDK_QUESTIONS, QUESTIONS, getDomain, type CaseStudy, type DomainId, type DomainMeta, type ExamId, type Question } from "@/lib/questions";
+import { prioritizeUnseen } from "@/lib/question-rotation";
+import { answerParts, feedbackLabel, isComplete, isStarted, scoreQuestion } from "@/lib/grading";
+import { EXAM_CONFIG, questionLabel, selectSession, type ExamLength, type PracticeTrack, type SessionConfig } from "@/lib/session-composer";
+import { AB100_CASE_STUDIES, AB100_CASE_STUDY_IDS, AB100_DOMAINS, AB100_QUESTIONS, CASE_STUDIES, CASE_STUDY_IDS, CLAUDE_QUESTIONS, CLAUDE_QUESTIONS_BY_COLLECTION, ALL_QUESTIONS, COPILOT_STUDIO_QUESTIONS, CORE_QUESTIONS, EXAMS, FOUNDRY_SDK_QUESTIONS, QUESTIONS, getDomain, type CaseStudy, type DomainId, type DomainMeta, type ExamId, type Question } from "@/lib/questions";
+import { QuestionInput } from "@/components/question-inputs";
 
 type Screen = "home" | "setup" | "exam" | "results" | "dashboard" | "learnmap" | "glossary";
 type FeedbackMode = "real" | "review";
-type ExamLength = "full" | "short";
-type PracticeTrack = "exam" | "cases" | "sdk" | "copilot";
 type Answers = Record<string, number[]>;
 
+/** Points earned and possible. Attempts before partial credit counted one point per question. */
 interface AttemptDomainStat {
   correct: number;
   total: number;
@@ -19,7 +21,11 @@ interface AttemptDomainStat {
 
 interface QuestionOutcome {
   id: string;
+  /** Every part right. */
   correct: boolean;
+  /** Absent on attempts recorded before partial credit; read as 1/1 or 0/1. */
+  earned?: number;
+  possible?: number;
 }
 
 /** A focused session draws only from questions matching the focus. Session intent, not a saved preference. */
@@ -32,8 +38,12 @@ interface Attempt {
   examId?: ExamId;
   completedAt: string;
   score: number;
+  /** Fully correct questions. */
   correct: number;
+  /** Questions in the session. */
   total: number;
+  /** Absent on attempts recorded before partial credit. */
+  points?: { earned: number; possible: number };
   durationSeconds: number;
   feedbackMode: FeedbackMode;
   examLength: ExamLength;
@@ -52,53 +62,6 @@ interface PersistedState {
 
 const STORAGE_KEY = "northstar-ai103-state-v3";
 const PASS_SCORE = 70;
-const AI103_CONFIG = {
-  exam: {
-    full: { questions: 50, minutes: 100, caseStudies: 2 },
-    short: { questions: 25, minutes: 50, caseStudies: 1 },
-  },
-  cases: {
-    full: { questions: 24, minutes: 90, caseStudies: 6 },
-    short: { questions: 12, minutes: 45, caseStudies: 3 },
-  },
-  sdk: {
-    full: { questions: 40, minutes: 70, caseStudies: 0 },
-    short: { questions: 20, minutes: 35, caseStudies: 0 },
-  },
-  copilot: {
-    full: { questions: 24, minutes: 40, caseStudies: 0 },
-    short: { questions: 12, minutes: 20, caseStudies: 0 },
-  },
-} as const;
-
-// AB-100 has no SDK or Copilot Studio specialty banks; those tracks are hidden.
-const AB100_CONFIG = {
-  exam: {
-    full: { questions: 50, minutes: 100, caseStudies: 2 },
-    short: { questions: 25, minutes: 50, caseStudies: 1 },
-  },
-  cases: {
-    full: { questions: 24, minutes: 90, caseStudies: 6 },
-    short: { questions: 12, minutes: 45, caseStudies: 3 },
-  },
-  sdk: AI103_CONFIG.sdk,
-  copilot: AI103_CONFIG.copilot,
-} as const;
-
-const EXAM_CONFIG: Record<ExamId, typeof AI103_CONFIG> = { ai103: AI103_CONFIG, ab100: AB100_CONFIG };
-
-/** Standalone-question targets per domain, weighted from each exam's published ranges. */
-const DOMAIN_TARGETS: Record<ExamId, Record<ExamLength, Partial<Record<DomainId, number>>>> = {
-  ai103: {
-    full: { plan: 13, gen: 16, vision: 7, language: 7, extract: 7 },
-    short: { plan: 7, gen: 8, vision: 3, language: 3, extract: 4 },
-  },
-  ab100: {
-    full: { "ab-plan": 14, "ab-design": 14, "ab-deploy": 22 },
-    short: { "ab-plan": 7, "ab-design": 7, "ab-deploy": 11 },
-  },
-};
-
 const TRACKS_BY_EXAM: Record<ExamId, PracticeTrack[]> = {
   ai103: ["exam", "cases", "sdk", "copilot"],
   ab100: ["exam", "cases"],
@@ -151,19 +114,6 @@ function getTrackDomain(id: DomainId, track: PracticeTrack, exam: ExamId = "ai10
 
 const QUESTION_BY_ID = new Map(ALL_QUESTIONS.map((question) => [question.id, question]));
 
-function shuffle<T>(items: T[]): T[] {
-  const result = [...items];
-  for (let i = result.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
-
-function equalAnswers(a: number[] = [], b: number[] = []): boolean {
-  return a.length === b.length && [...a].sort((x, y) => x - y).every((value, index) => value === [...b].sort((x, y) => x - y)[index]);
-}
-
 function selectQuestions(exam: ExamId, track: PracticeTrack, length: ExamLength, recentIds: string[], includeClaude: boolean, focus: Focus | null = null): Question[] {
   const config = EXAM_CONFIG[exam][track][length];
 
@@ -182,55 +132,7 @@ function selectQuestions(exam: ExamId, track: PracticeTrack, length: ExamLength,
     return picked;
   }
 
-
-  if (exam === "ab100") {
-    const caseIds = prioritizeUnseenCases([...AB100_CASE_STUDY_IDS], AB100_QUESTIONS, recentIds).slice(0, config.caseStudies);
-    const orderedCases = caseIds.flatMap((caseId) => AB100_QUESTIONS.filter((question) => question.caseStudyId === caseId));
-    if (track === "cases") return orderedCases;
-
-    const targets = { ...DOMAIN_TARGETS.ab100[length] } as Record<string, number>;
-    orderedCases.forEach((question) => { targets[question.domain] = (targets[question.domain] ?? 0) - 1; });
-    const standalone = AB100_DOMAINS.flatMap((domain) => {
-      const candidates = AB100_QUESTIONS.filter((question) => question.domain === domain.id && !question.caseStudyId);
-      return prioritizeUnseen(candidates, recentIds).slice(0, Math.max(0, targets[domain.id] ?? 0));
-    });
-    const picked = [...shuffle(standalone), ...orderedCases];
-    if (picked.length < config.questions) {
-      const chosen = new Set(picked.map((question) => question.id));
-      picked.push(...prioritizeUnseen(AB100_QUESTIONS.filter((question) => !chosen.has(question.id) && !question.caseStudyId), recentIds).slice(0, config.questions - picked.length));
-    }
-    return picked.slice(0, config.questions);
-  }
-
-  if (track === "sdk" || track === "copilot") {
-    const base = track === "sdk" ? FOUNDRY_SDK_QUESTIONS : COPILOT_STUDIO_QUESTIONS;
-    const bank = includeClaude ? [...base, ...CLAUDE_QUESTIONS_BY_COLLECTION[track]] : base;
-    return prioritizeUnseen(bank, recentIds).slice(0, config.questions);
-  }
-  const caseCandidates = prioritizeUnseenCases(CASE_STUDY_IDS, CORE_QUESTIONS, recentIds);
-  const selectedCaseIds = caseCandidates.slice(0, config.caseStudies);
-  const caseQuestions = selectedCaseIds.flatMap((caseId) => CORE_QUESTIONS.filter((question) => question.caseStudyId === caseId));
-  const orderedCases = selectedCaseIds.flatMap((caseId) => caseQuestions.filter((question) => question.caseStudyId === caseId));
-  if (track === "cases") return orderedCases;
-
-  const targets = { ...DOMAIN_TARGETS.ai103[length] } as Record<string, number>;
-  caseQuestions.forEach((question) => { targets[question.domain] = (targets[question.domain] ?? 0) - 1; });
-
-  // The Claude bank widens the per-domain candidate pool, so the published domain
-  // weighting is preserved whether or not the toggle is on.
-  const corePool = includeClaude ? [...CORE_QUESTIONS, ...CLAUDE_QUESTIONS_BY_COLLECTION.core] : CORE_QUESTIONS;
-  const standardQuestions = DOMAINS.flatMap((domain) => {
-    const candidates = corePool.filter((question) => question.domain === domain.id && !question.caseStudyId);
-    return prioritizeUnseen(candidates, recentIds).slice(0, Math.max(0, targets[domain.id] ?? 0));
-  });
-
-  const selected = [...shuffle(standardQuestions), ...orderedCases];
-  if (selected.length < config.questions) {
-    const selectedIds = new Set(selected.map((question) => question.id));
-    const fill = prioritizeUnseen(corePool.filter((question) => !selectedIds.has(question.id)), recentIds).slice(0, config.questions - selected.length);
-    selected.push(...fill);
-  }
-  return selected.slice(0, config.questions);
+  return selectSession(exam, track, length, recentIds, includeClaude);
 }
 
 function emptyDomainStats(): Record<DomainId, AttemptDomainStat> {
@@ -344,25 +246,30 @@ export default function ExamApp() {
 
   const finishExam = useCallback(() => {
     if (!examQuestions.length) return;
+    // Each correct part is worth a point, so domain stats and the score are in points.
     const stats = emptyDomainStats();
     const outcomes: QuestionOutcome[] = [];
     let correctCount = 0;
+    let earnedPoints = 0;
+    let possiblePoints = 0;
     examQuestions.forEach((question) => {
-      const isCorrect = equalAnswers(answers[question.id], question.correct);
-      outcomes.push({ id: question.id, correct: isCorrect });
-      stats[question.domain].total += 1;
-      if (isCorrect) {
-        correctCount += 1;
-        stats[question.domain].correct += 1;
-      }
+      const { earned, possible } = scoreQuestion(question, answers[question.id]);
+      const isCorrect = earned === possible;
+      outcomes.push({ id: question.id, correct: isCorrect, earned, possible });
+      stats[question.domain].correct += earned;
+      stats[question.domain].total += possible;
+      earnedPoints += earned;
+      possiblePoints += possible;
+      if (isCorrect) correctCount += 1;
     });
-    const score = Math.round((correctCount / examQuestions.length) * 100);
+    const score = Math.round((earnedPoints / possiblePoints) * 100);
     const attempt: Attempt = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
       completedAt: new Date().toISOString(),
       score,
       correct: correctCount,
       total: examQuestions.length,
+      points: { earned: earnedPoints, possible: possiblePoints },
       durationSeconds: EXAM_CONFIG[examId][practiceTrack][examLength].minutes * 60 - timeLeft,
       feedbackMode,
       examLength,
@@ -421,23 +328,15 @@ export default function ExamApp() {
   const currentQuestion = examQuestions[currentIndex];
   const currentAnswer = currentQuestion ? answers[currentQuestion.id] ?? [] : [];
   const currentChecked = currentQuestion ? checked.has(currentQuestion.id) : false;
-  const answeredCount = examQuestions.filter((question) => (answers[question.id] ?? []).length > 0).length;
+  const answeredCount = examQuestions.filter((question) => isComplete(question, answers[question.id])).length;
 
-  const selectAnswer = (optionIndex: number) => {
+  const setAnswer = (next: number[]) => {
     if (!currentQuestion || currentChecked) return;
-    const selected = answers[currentQuestion.id] ?? [];
-    const next = currentQuestion.correct.length > 1
-      ? selected.includes(optionIndex)
-        ? selected.filter((item) => item !== optionIndex)
-        : selected.length < currentQuestion.correct.length
-          ? [...selected, optionIndex]
-          : selected
-      : [optionIndex];
     setAnswers((value) => ({ ...value, [currentQuestion.id]: next }));
   };
 
   const checkCurrent = () => {
-    if (!currentQuestion || currentAnswer.length !== currentQuestion.correct.length) return;
+    if (!currentQuestion || !isComplete(currentQuestion, currentAnswer)) return;
     setChecked((value) => new Set(value).add(currentQuestion.id));
   };
 
@@ -456,7 +355,7 @@ export default function ExamApp() {
     }
     const unansweredInCase = examQuestions
       .slice(caseSectionStart, nextIndex)
-      .filter((question) => !(answers[question.id] ?? []).length).length;
+      .filter((question) => !isComplete(question, answers[question.id])).length;
     const warning = unansweredInCase
       ? `This case has ${unansweredInCase} unanswered question${unansweredInCase === 1 ? "" : "s"}. After you leave this section, you cannot return. Continue?`
       : "After you leave this case-study section, you cannot return to it. Continue?";
@@ -494,9 +393,9 @@ export default function ExamApp() {
         const key = question.syllabus.bullet;
         if (!objectives.has(key)) objectives.set(key, { bullet: key, skill: question.syllabus.skill, correct: 0, total: 0 });
         const row = objectives.get(key)!;
-        row.total += 1;
-        if (outcome.correct) row.correct += 1;
-        else if (!missed.includes(outcome.id)) missed.push(outcome.id);
+        row.total += outcome.possible ?? 1;
+        row.correct += outcome.earned ?? (outcome.correct ? 1 : 0);
+        if (!outcome.correct && !missed.includes(outcome.id)) missed.push(outcome.id);
       }
     }
     const objectiveRows = [...objectives.values()]
@@ -602,6 +501,13 @@ export default function ExamApp() {
 
   if (screen === "setup") {
     const config = EXAM_CONFIG[examId][practiceTrack][examLength];
+    const fullConfig = EXAM_CONFIG[examId][practiceTrack].full;
+    const shortConfig = EXAM_CONFIG[examId][practiceTrack].short;
+    const sessionHeading = (option: SessionConfig) => practiceTrack === "cases"
+      ? `${option.caseStudies} cases · ${questionLabel(option)} questions`
+      : practiceTrack === "sdk" ? `${option.questions} of ${FOUNDRY_SDK_QUESTIONS.length} questions`
+      : practiceTrack === "copilot" ? `${option.questions} of ${COPILOT_STUDIO_QUESTIONS.length} questions`
+      : `${questionLabel(option)} questions · ${option.minutes} min`;
     return (
       <main className="shell">
         {nav(practiceTrack === "cases" ? "cases" : practiceTrack === "sdk" ? "sdk" : practiceTrack === "copilot" ? "copilot" : "practice")}
@@ -625,7 +531,7 @@ export default function ExamApp() {
             <div className="choice-grid two">
               <button className={`choice-card ${practiceTrack === "exam" ? "selected" : ""}`} onClick={() => setPracticeTrack("exam")}>
                 <span className="choice-kicker">Exam simulation</span><span className="choice-check">{practiceTrack === "exam" ? "✓" : ""}</span>
-                <h3>Balanced assessment</h3><p>Weighted standalone questions with one or two complete case-study sections.</p><small>Best for overall readiness</small>
+                <h3>Balanced assessment</h3><p>Weighted standalone questions in every item format, then one complete case-study section.</p><small>Best for overall readiness</small>
               </button>
               <button className={`choice-card ${practiceTrack === "cases" ? "selected" : ""}`} onClick={() => setPracticeTrack("cases")}>
                 <span className="choice-kicker">Case Studies</span><span className="choice-check">{practiceTrack === "cases" ? "✓" : ""}</span>
@@ -661,11 +567,11 @@ export default function ExamApp() {
             <div className="choice-grid two">
               <button className={`choice-card compact ${examLength === "full" ? "selected" : ""}`} onClick={() => setExamLength("full")}>
                 <span className="choice-kicker">Full</span><span className="choice-check">{examLength === "full" ? "✓" : ""}</span>
-                <h3>{practiceTrack === "cases" ? `${config.caseStudies} cases · ${config.questions} questions` : practiceTrack === "sdk" ? `${config.questions} of ${FOUNDRY_SDK_QUESTIONS.length} questions` : practiceTrack === "copilot" ? `${config.questions} of ${COPILOT_STUDIO_QUESTIONS.length} questions` : `${config.questions} questions · ${config.minutes} min`}</h3><p>{practiceTrack === "cases" ? "Six locked case sections with a 90-minute timer." : practiceTrack === "sdk" ? "A 70-minute deep SDK implementation session." : practiceTrack === "copilot" ? "A 40-minute Copilot Studio architecture session." : "Typical certification-exam length with two case-study blocks."}</p>
+                <h3>{sessionHeading(fullConfig)}</h3><p>{practiceTrack === "cases" ? `${fullConfig.caseStudies} locked case sections with a ${fullConfig.minutes}-minute timer.` : practiceTrack === "sdk" ? "A 70-minute deep SDK implementation session." : practiceTrack === "copilot" ? "A 40-minute Copilot Studio architecture session." : "Real-exam length: standalone questions, then one 6–8 question case study."}</p>
               </button>
               <button className={`choice-card compact ${examLength === "short" ? "selected" : ""}`} onClick={() => setExamLength("short")}>
                 <span className="choice-kicker">Short</span><span className="choice-check">{examLength === "short" ? "✓" : ""}</span>
-                <h3>{practiceTrack === "cases" ? `${config.caseStudies} cases · ${config.questions} questions` : practiceTrack === "sdk" ? `${config.questions} of ${FOUNDRY_SDK_QUESTIONS.length} questions` : practiceTrack === "copilot" ? `${config.questions} of ${COPILOT_STUDIO_QUESTIONS.length} questions` : `${config.questions} questions · ${config.minutes} min`}</h3><p>{practiceTrack === "cases" ? "Three locked case sections with a 45-minute timer." : practiceTrack === "sdk" ? "A focused 35-minute SDK session." : practiceTrack === "copilot" ? "A focused 20-minute Copilot Studio session." : "Half-length session with one case-study block."}</p>
+                <h3>{sessionHeading(shortConfig)}</h3><p>{practiceTrack === "cases" ? `${shortConfig.caseStudies} locked case sections with a ${shortConfig.minutes}-minute timer.` : practiceTrack === "sdk" ? "A focused 35-minute SDK session." : practiceTrack === "copilot" ? "A focused 20-minute Copilot Studio session." : "Half-length session with one case-study block."}</p>
               </button>
             </div>
           </div>
@@ -688,7 +594,7 @@ export default function ExamApp() {
           </div>}
 
           <div className="launch-bar">
-            <div><span>{TRACK_LABELS[examId][practiceTrack]} · {feedbackMode === "real" ? "Real" : "Review"} · {examLength === "full" ? "Full" : "Short"}{claudeEnabled ? " · Claude questions" : ""}</span><strong>{config.questions} questions · {config.minutes} minutes{config.caseStudies ? ` · ${config.caseStudies} case ${config.caseStudies === 1 ? "study" : "studies"}` : ""}{claudeExtraCount ? ` · +${claudeExtraCount} in the pool` : ""}</strong></div>
+            <div><span>{TRACK_LABELS[examId][practiceTrack]} · {feedbackMode === "real" ? "Real" : "Review"} · {examLength === "full" ? "Full" : "Short"}{claudeEnabled ? " · Claude questions" : ""}</span><strong>{questionLabel(config)} questions · {config.minutes} minutes{config.caseStudies ? ` · ${config.caseStudies} case ${config.caseStudies === 1 ? "study" : "studies"}` : ""}{claudeExtraCount ? ` · +${claudeExtraCount} in the pool` : ""}</strong></div>
             <button className="primary-button" onClick={startExam}>Begin session <span>→</span></button>
           </div>
           <p className="integrity-note">Questions are original and aligned to Microsoft&apos;s published study guides and product documentation. This facility does not use or reproduce exam dumps.</p>
@@ -699,7 +605,8 @@ export default function ExamApp() {
 
   if (screen === "exam" && currentQuestion) {
     const domain = getTrackDomain(currentQuestion.domain, practiceTrack, examId);
-    const isCorrect = currentChecked && equalAnswers(currentAnswer, currentQuestion.correct);
+    const currentScore = scoreQuestion(currentQuestion, currentAnswer);
+    const feedbackTone = currentScore.earned === currentScore.possible ? "success" : currentScore.earned > 0 ? "partial" : "error";
     const isCaseStart = currentQuestion.caseStudyId && (currentIndex === 0 || examQuestions[currentIndex - 1]?.caseStudyId !== currentQuestion.caseStudyId);
     const caseStudy = currentQuestion.caseStudyId ? casesForExam(examId)[currentQuestion.caseStudyId] : null;
     const sessionCaseIds = [...new Set(examQuestions.map((question) => question.caseStudyId).filter((id): id is string => Boolean(id)))];
@@ -720,10 +627,11 @@ export default function ExamApp() {
             <div className="navigator-head"><div><span className="eyebrow">{practiceTrack === "cases" ? `Case ${currentCasePosition + 1} of ${sessionCaseIds.length}` : "Session navigator"}</span><h2>{practiceTrack === "cases" ? caseStudy?.organization : "Questions"}</h2></div><button onClick={() => setMobileNavigatorOpen(false)} aria-label="Close question navigator">×</button></div>
             <div className="question-grid">
               {examQuestions.map((question, index) => {
-                const answered = (answers[question.id] ?? []).length > 0;
+                const answered = isComplete(question, answers[question.id]);
+                const started = !answered && isStarted(question, answers[question.id]);
                 const accessible = practiceTrack !== "cases" || question.caseStudyId === currentQuestion.caseStudyId;
                 const locked = practiceTrack === "cases" && index < caseSectionStart;
-                return <button key={question.id} disabled={!accessible} className={`${index === currentIndex ? "current" : ""} ${answered ? "answered" : ""} ${flagged.has(question.id) ? "flagged" : ""} ${locked ? "locked" : ""} ${!accessible && !locked ? "future" : ""}`} onClick={() => goToQuestion(index)} aria-label={`Question ${index + 1}${answered ? ", answered" : ""}${locked ? ", locked" : ""}`}>{index + 1}</button>;
+                return <button key={question.id} disabled={!accessible} className={`${index === currentIndex ? "current" : ""} ${answered ? "answered" : ""} ${started ? "started" : ""} ${flagged.has(question.id) ? "flagged" : ""} ${locked ? "locked" : ""} ${!accessible && !locked ? "future" : ""}`} onClick={() => goToQuestion(index)} aria-label={`Question ${index + 1}${answered ? ", answered" : started ? ", partly answered" : ""}${locked ? ", locked" : ""}`}>{index + 1}</button>;
               })}
             </div>
             <div className="legend"><span><i className="dot current" />Current</span><span><i className="dot answered" />Answered</span><span><i className="flag-mini">◆</i>Flagged</span></div>
@@ -739,8 +647,10 @@ export default function ExamApp() {
               <details className="case-panel" open={Boolean(isCaseStart)}>
                 <summary><span>{caseStudy.title}</span><small>{isCaseStart ? "Read the scenario" : "View scenario"}</small></summary>
                 <div className="case-body">
-                  <p><strong>Background</strong>{caseStudy.background}</p>
+                  <p className="case-wide"><strong>Background</strong>{caseStudy.background}</p>
+                  <div><strong>Audience</strong><ul>{caseStudy.audience.map((item) => <li key={item}>{item}</li>)}</ul></div>
                   <div><strong>Existing environment</strong><ul>{caseStudy.existingEnvironment.map((item) => <li key={item}>{item}</li>)}</ul></div>
+                  <div className="case-wide"><strong>Use cases</strong><ul>{caseStudy.useCases.map((item) => <li key={item}>{item}</li>)}</ul></div>
                   <div><strong>Requirements</strong><ul>{caseStudy.requirements.map((item) => <li key={item}>{item}</li>)}</ul></div>
                   <div><strong>Constraints</strong><ul>{caseStudy.constraints.map((item) => <li key={item}>{item}</li>)}</ul></div>
                 </div>
@@ -753,22 +663,10 @@ export default function ExamApp() {
               {currentQuestion.code && (
                 <pre className="question-code" data-language={currentQuestion.code.language}><code>{currentQuestion.code.snippet}</code></pre>
               )}
-              <p className="select-instruction">{currentQuestion.correct.length > 1 ? `Select ${currentQuestion.correct.length} answers.` : "Select one answer."}</p>
-              <div className="exam-options">
-                {currentQuestion.options.map((option, index) => {
-                  const selected = currentAnswer.includes(index);
-                  const correctOption = currentChecked && currentQuestion.correct.includes(index);
-                  const wrongSelected = currentChecked && selected && !currentQuestion.correct.includes(index);
-                  return (
-                    <button key={option} disabled={currentChecked} className={`${selected ? "selected" : ""} ${correctOption ? "correct" : ""} ${wrongSelected ? "wrong" : ""}`} onClick={() => selectAnswer(index)}>
-                      <span>{String.fromCharCode(65 + index)}</span><p>{option}</p>{selected && <i>{currentQuestion.correct.length > 1 ? "✓" : "●"}</i>}
-                    </button>
-                  );
-                })}
-              </div>
+              <QuestionInput key={currentQuestion.id} question={currentQuestion} answer={currentAnswer} checked={currentChecked} onChange={setAnswer} />
               {currentChecked && (
-                <div className={`feedback-panel ${isCorrect ? "success" : "error"}`} role="status">
-                  <strong>{isCorrect ? "Correct" : "Not quite"}</strong>
+                <div className={`feedback-panel ${feedbackTone}`} role="status">
+                  <strong>{feedbackLabel(currentScore)}</strong>
                   <p>{currentQuestion.explanation}</p>
                   <SyllabusNote question={currentQuestion} />
                 </div>
@@ -778,7 +676,7 @@ export default function ExamApp() {
               <button className="secondary-button" disabled={practiceTrack === "cases" ? currentIndex === caseSectionStart : currentIndex === 0} onClick={() => goToQuestion(currentIndex - 1)}>← Previous</button>
               <div>
                 {feedbackMode === "review" && !currentChecked ? (
-                  <button className="primary-button" disabled={currentAnswer.length !== currentQuestion.correct.length} onClick={checkCurrent}>Check answer</button>
+                  <button className="primary-button" disabled={!isComplete(currentQuestion, currentAnswer)} onClick={checkCurrent}>Check answer</button>
                 ) : isLastInCase && currentIndex < examQuestions.length - 1 ? (
                   <button className="primary-button" onClick={leaveCaseStudy}>Submit case &amp; continue →</button>
                 ) : currentIndex === examQuestions.length - 1 ? (
@@ -807,7 +705,7 @@ export default function ExamApp() {
           <span className="eyebrow">Session complete</span>
           <div className="score-ring" style={{ "--score": `${lastAttempt.score * 3.6}deg` } as React.CSSProperties}><div><strong>{lastAttempt.score}%</strong><span>{passed ? "Ready signal" : "Keep building"}</span></div></div>
           <h1>{passed ? "Strong work. You crossed the readiness line." : "Good diagnostic. Your next focus is clear."}</h1>
-          <p>{lastAttempt.correct} of {lastAttempt.total} correct · {formatDuration(lastAttempt.durationSeconds)} · {TRACK_LABELS[lastAttempt.examId ?? "ai103"][lastAttempt.practiceTrack]} · {lastAttempt.feedbackMode === "real" ? "Real" : "Review"} mode</p>
+          <p>{lastAttempt.points ? `${lastAttempt.points.earned} of ${lastAttempt.points.possible} points · ` : ""}{lastAttempt.correct} of {lastAttempt.total} questions fully correct · {formatDuration(lastAttempt.durationSeconds)} · {TRACK_LABELS[lastAttempt.examId ?? "ai103"][lastAttempt.practiceTrack]} · {lastAttempt.feedbackMode === "real" ? "Real" : "Review"} mode</p>
           <div className="result-actions"><button className="primary-button" onClick={() => setScreen("setup")}>Start another session →</button><button className="secondary-button" onClick={() => setScreen("dashboard")}>Open dashboard</button></div>
         </section>
 
@@ -817,7 +715,7 @@ export default function ExamApp() {
             {resultDomains.map((domain) => {
               const stat = lastAttempt.domainStats[domain.id];
               const score = accuracy(stat.correct, stat.total);
-              return <div className="domain-result" key={domain.id}><div><span style={{ background: domain.color }} /><strong>{domain.shortName}</strong><b>{score}%</b></div><div className="metric-track"><i style={{ width: `${score}%`, background: domain.color }} /><em /></div><p>{stat.correct} of {stat.total} correct · {score >= 80 ? "Strong" : score >= 70 ? "On track" : "Review next"}</p></div>;
+              return <div className="domain-result" key={domain.id}><div><span style={{ background: domain.color }} /><strong>{domain.shortName}</strong><b>{score}%</b></div><div className="metric-track"><i style={{ width: `${score}%`, background: domain.color }} /><em /></div><p>{stat.correct} of {stat.total} points · {score >= 80 ? "Strong" : score >= 70 ? "On track" : "Review next"}</p></div>;
             })}
           </div>
         </section>
@@ -827,8 +725,28 @@ export default function ExamApp() {
           <div className="review-list">
             {reviewedQuestions.map((question, index) => {
               const selected = answers[question.id] ?? [];
-              const correct = equalAnswers(selected, question.correct);
-              return <article key={question.id} className={`review-item ${correct ? "correct" : "wrong"}`}><div className="review-number">{index + 1}</div><div><span>{getTrackDomain(question.domain, lastAttempt.practiceTrack, lastAttempt.examId ?? "ai103").shortName} · {question.topic}</span><h3>{question.prompt}</h3><p><strong>{correct ? "Correct." : `Correct answer: ${question.correct.map((answer) => String.fromCharCode(65 + answer)).join(", ")}.`}</strong> {question.explanation}</p><SyllabusNote question={question} /></div></article>;
+              const { earned, possible } = scoreQuestion(question, selected);
+              const parts = answerParts(question, selected);
+              const tone = earned === possible ? "correct" : earned > 0 ? "partial" : "wrong";
+              return (
+                <article key={question.id} className={`review-item ${tone}`}>
+                  <div className="review-number">{index + 1}</div>
+                  <div>
+                    <span>{getTrackDomain(question.domain, lastAttempt.practiceTrack, lastAttempt.examId ?? "ai103").shortName} · {question.topic}{possible > 1 ? ` · ${earned}/${possible} points` : ""}</span>
+                    <h3>{question.prompt}</h3>
+                    <ul className="answer-parts">
+                      {parts.map((part, partIndex) => (
+                        <li key={partIndex} className={part.ok ? "ok" : "miss"}>
+                          <b>{part.label}</b>
+                          <span>{part.ok ? part.expected : <>Yours: {part.chosen}<br />Correct: {part.expected}</>}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p>{question.explanation}</p>
+                    <SyllabusNote question={question} />
+                  </div>
+                </article>
+              );
             })}
           </div>
         </section>
@@ -999,7 +917,7 @@ export default function ExamApp() {
                 <div key={domain.id} className="dashboard-domain">
                   <div><span className="domain-swatch" style={{ background: domain.color }} /><strong>{domain.shortName}</strong><b>{domain.total ? `${domain.score}%` : "—"}</b></div>
                   <div className="metric-track"><i style={{ width: `${domain.score}%`, background: domain.color }} /><em /></div>
-                  <p>{domain.total ? `${domain.correct}/${domain.total} correct · ${domain.score >= 80 ? "Strong area" : domain.score >= 70 ? "Developing" : "Needs attention"}` : "No data yet"}</p>
+                  <p>{domain.total ? `${domain.correct}/${domain.total} points · ${domain.score >= 80 ? "Strong area" : domain.score >= 70 ? "Developing" : "Needs attention"}` : "No data yet"}</p>
                 </div>
               ))}
             </div>
@@ -1039,7 +957,7 @@ export default function ExamApp() {
                   <div className="objective-head"><span>{row.skill}</span><b className={row.score >= 70 ? "" : "weak"}>{row.score}%</b></div>
                   <p>{row.bullet}</p>
                   <div className="metric-track"><i style={{ width: `${row.score}%`, background: row.score >= 80 ? "var(--green)" : row.score >= 70 ? "var(--blue)" : "var(--red)" }} /><em /></div>
-                  <small>{row.correct} of {row.total} correct</small>
+                  <small>{row.correct} of {row.total} points</small>
                 </article>
               ))}
             </div>
@@ -1055,7 +973,7 @@ export default function ExamApp() {
               <div className="history-row history-head" role="row"><span>Date</span><span>Mode</span><span>Length</span><span>Duration</span><span>Score</span></div>
               {attempts.slice(0, 8).map((attempt) => {
                 const attemptConfig = EXAM_CONFIG[attempt.examId ?? "ai103"][attempt.practiceTrack][attempt.examLength];
-                return <div className="history-row" role="row" key={attempt.id}><span>{new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(attempt.completedAt))}</span><span>{TRACK_LABELS[attempt.examId ?? "ai103"][attempt.practiceTrack]}</span><span>{attempt.practiceTrack === "cases" ? `${attemptConfig.caseStudies} cases` : `${attempt.examLength === "full" ? "Full" : "Short"} · ${attemptConfig.questions}`}</span><span>{formatDuration(attempt.durationSeconds)}</span><strong className={attempt.score >= 70 ? "pass" : "build"}>{attempt.score}%</strong></div>;
+                return <div className="history-row" role="row" key={attempt.id}><span>{new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(attempt.completedAt))}</span><span>{TRACK_LABELS[attempt.examId ?? "ai103"][attempt.practiceTrack]}</span><span>{attempt.practiceTrack === "cases" ? `${attemptConfig.caseStudies} cases` : `${attempt.examLength === "full" ? "Full" : "Short"} · ${attempt.total}`}</span><span>{formatDuration(attempt.durationSeconds)}</span><strong className={attempt.score >= 70 ? "pass" : "build"}>{attempt.score}%</strong></div>;
               })}
             </div>
           )}

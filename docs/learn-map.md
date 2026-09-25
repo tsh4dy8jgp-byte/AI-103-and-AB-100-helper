@@ -39,7 +39,7 @@ On your first lookup, open your exam's top two tree roots in separate tabs and l
 
 ## AI-103 — Developing AI Apps and Agents on Azure
 
-350 questions cite 109 pages across 9 documentation trees. The first 4 carry 94% of them.
+438 questions cite 113 pages across 10 documentation trees. The first 4 carry 94% of them.
 
 ### Fast paths
 
@@ -59,38 +59,71 @@ On your first lookup, open your exam's top two tree roots in separate tabs and l
 
 ### Trees
 
-#### Microsoft Foundry — `/azure/foundry/` (186 questions, 30 pages)
+#### Microsoft Foundry — `/azure/foundry/` (230 questions, 31 pages)
 
-- [Responses API in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/openai/how-to/responses) — 26q
-- [Best practices for using tools in Foundry Agent Service](https://learn.microsoft.com/azure/foundry/agents/concepts/tool-best-practice) — 20q
-- [Get started with the Microsoft Foundry SDK](https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code) — 20q
-- [How to set up tracing in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/observability/how-to/trace-agent-setup) — 14q
-- [Authentication and authorization in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/authentication-authorization-foundry) — 13q
-- [Run evaluations in the cloud by using the Foundry SDK](https://learn.microsoft.com/azure/foundry/how-to/develop/cloud-evaluation) — 12q
-- [Role-based access control for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry) — 8q
+- [Responses API in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/openai/how-to/responses) — 31q
+- [Best practices for using tools in Foundry Agent Service](https://learn.microsoft.com/azure/foundry/agents/concepts/tool-best-practice) — 27q
+- [Get started with the Microsoft Foundry SDK](https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code) — 21q
+- [How to set up tracing in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/observability/how-to/trace-agent-setup) — 17q
+- [Authentication and authorization in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/authentication-authorization-foundry) — 14q
+- [Run evaluations in the cloud by using the Foundry SDK](https://learn.microsoft.com/azure/foundry/how-to/develop/cloud-evaluation) — 13q
+- [Deployment types for Microsoft Foundry Models](https://learn.microsoft.com/azure/foundry/foundry-models/concepts/deployment-types) — 11q
+- [Role-based access control for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry) — 10q
 - [Create a project for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/how-to/create-projects) — 7q
-- [Deployment types for Microsoft Foundry Models](https://learn.microsoft.com/azure/foundry/foundry-models/concepts/deployment-types) — 7q
-- [Structured outputs](https://learn.microsoft.com/azure/foundry/openai/how-to/structured-outputs) — 6q
-- [Foundry Models quotas and limits](https://learn.microsoft.com/azure/foundry/foundry-models/quotas-limits) — 5q
-- [Monitor agents with the Agent Monitoring Dashboard](https://learn.microsoft.com/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard) — 5q
-- [Built-in evaluators reference](https://learn.microsoft.com/azure/foundry/concepts/built-in-evaluators) — 4q
+- [Foundry Models quotas and limits](https://learn.microsoft.com/azure/foundry/foundry-models/quotas-limits) — 7q
+- [Monitor agents with the Agent Monitoring Dashboard](https://learn.microsoft.com/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard) — 7q
+- [Structured outputs](https://learn.microsoft.com/azure/foundry/openai/how-to/structured-outputs) — 7q
+- [Built-in evaluators reference](https://learn.microsoft.com/azure/foundry/concepts/built-in-evaluators) — 6q
+- [Generate images with Foundry Models](https://learn.microsoft.com/azure/foundry/openai/how-to/dall-e) — 6q
+- [Model router for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/openai/concepts/model-router) — 5q
+- [Video generation with Sora 2](https://learn.microsoft.com/azure/foundry/openai/concepts/video-generation) — 5q
+- [Agent evaluators](https://learn.microsoft.com/azure/foundry/concepts/evaluation-evaluators/agent-evaluators) — 4q
 - [Code Interpreter tool for Foundry agents](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/code-interpreter) — 4q
-- [Generate images with Foundry Models](https://learn.microsoft.com/azure/foundry/openai/how-to/dall-e) — 4q
-- [Model router for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/openai/concepts/model-router) — 4q
-- [Video generation with Sora 2](https://learn.microsoft.com/azure/foundry/openai/concepts/video-generation) — 4q
-- [Agent evaluators](https://learn.microsoft.com/azure/foundry/concepts/evaluation-evaluators/agent-evaluators) — 3q
+- [Observability in generative AI](https://learn.microsoft.com/azure/foundry/concepts/observability) — 4q
 - [File search tool for agents](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/file-search) — 3q
-- [Observability in generative AI](https://learn.microsoft.com/azure/foundry/concepts/observability) — 3q
+- [Get started with Azure OpenAI audio generation](https://learn.microsoft.com/azure/foundry/openai/audio-completions-quickstart) — 3q
 - [What is Foundry IQ?](https://learn.microsoft.com/azure/foundry/agents/concepts/what-is-foundry-iq) — 3q
-- [Get started with Azure OpenAI audio generation](https://learn.microsoft.com/azure/foundry/openai/audio-completions-quickstart) — 2q
+- [Azure OpenAI reasoning models](https://learn.microsoft.com/azure/foundry/openai/how-to/reasoning) — 2q
+- [Foundry Toolbox](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/toolbox) — 2q
+- [Microsoft Foundry Agent Service](https://learn.microsoft.com/azure/foundry/agents/overview) — 2q
+- [Plan and manage costs for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/manage-costs) — 2q
 - [Run evaluations from the Microsoft Foundry portal](https://learn.microsoft.com/azure/foundry/how-to/evaluate-generative-ai-app) — 2q
+- [What is provisioned throughput for Foundry Models?](https://learn.microsoft.com/azure/foundry/openai/concepts/provisioned-throughput) — 2q
 - [Agent applications in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/agents/how-to/agent-applications) — 1q
-- [Azure OpenAI reasoning models](https://learn.microsoft.com/azure/foundry/openai/how-to/reasoning) — 1q
+- [Connect agents to Model Context Protocol servers](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/model-context-protocol) — 1q
 - [Feature availability across cloud regions](https://learn.microsoft.com/azure/foundry/reference/region-support) — 1q
-- [Foundry Toolbox](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/toolbox) — 1q
-- [Microsoft Foundry Agent Service](https://learn.microsoft.com/azure/foundry/agents/overview) — 1q
-- [Plan and manage costs for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/manage-costs) — 1q
-- [What is provisioned throughput for Foundry Models?](https://learn.microsoft.com/azure/foundry/openai/concepts/provisioned-throughput) — 1q
+
+#### Azure AI services and Foundry Tools — `/azure/ai-services/` (77 questions, 29 pages)
+
+- [Prompt Shields](https://learn.microsoft.com/azure/ai-services/content-safety/concepts/jailbreak-detection) — 8q
+- [Content Understanding document solutions](https://learn.microsoft.com/azure/ai-services/content-understanding/document/overview) — 6q
+- [What is a Content Understanding analyzer?](https://learn.microsoft.com/azure/ai-services/content-understanding/concepts/analyzer-reference) — 6q
+- [Document elements and spans](https://learn.microsoft.com/azure/ai-services/content-understanding/document/elements) — 4q
+- [Language identification with Speech](https://learn.microsoft.com/azure/ai-services/speech-service/language-identification) — 4q
+- [Speech translation](https://learn.microsoft.com/azure/ai-services/speech-service/speech-translation) — 4q
+- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — 4q
+- [Content Understanding video solutions](https://learn.microsoft.com/azure/ai-services/content-understanding/video/overview) — 3q
+- [Custom categories in Azure AI Content Safety](https://learn.microsoft.com/azure/ai-services/content-safety/concepts/custom-categories) — 3q
+- [Detect personally identifiable information](https://learn.microsoft.com/azure/ai-services/language-service/personally-identifiable-information/overview) — 3q
+- [Groundedness detection](https://learn.microsoft.com/azure/ai-services/content-safety/concepts/groundedness) — 3q
+- [Batch transcription](https://learn.microsoft.com/azure/ai-services/speech-service/batch-transcription) — 2q
+- [Custom text classification](https://learn.microsoft.com/azure/ai-services/language-service/custom-text-classification/overview) — 2q
+- [Document translation](https://learn.microsoft.com/azure/ai-services/translator/document-translation/overview) — 2q
+- [Fast transcription](https://learn.microsoft.com/azure/ai-services/speech-service/fast-transcription-create) — 2q
+- [Improve recognition accuracy with phrase lists](https://learn.microsoft.com/azure/ai-services/speech-service/improve-accuracy-phrase-list) — 2q
+- [Quickstart: Use Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/quickstart/use-rest-api) — 2q
+- [Sentiment analysis and opinion mining](https://learn.microsoft.com/azure/ai-services/language-service/sentiment-opinion-mining/overview) — 2q
+- [Speech Synthesis Markup Language](https://learn.microsoft.com/azure/ai-services/speech-service/speech-synthesis-markup) — 2q
+- [Speech to text](https://learn.microsoft.com/azure/ai-services/speech-service/speech-to-text) — 2q
+- [What is Azure Content Understanding in Foundry Tools?](https://learn.microsoft.com/azure/ai-services/content-understanding/overview) — 2q
+- [What is Azure Translator in Foundry Tools?](https://learn.microsoft.com/azure/ai-services/translator/translator-overview) — 2q
+- [Content Understanding image solutions](https://learn.microsoft.com/azure/ai-services/content-understanding/image/overview) — 1q
+- [Custom Translator](https://learn.microsoft.com/azure/ai-services/translator/custom-translator/overview) — 1q
+- [Language detection](https://learn.microsoft.com/azure/ai-services/language-service/language-detection/overview) — 1q
+- [Prebuilt analyzers in Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/concepts/prebuilt-analyzers) — 1q
+- [Real-time diarization](https://learn.microsoft.com/azure/ai-services/speech-service/get-started-stt-diarization) — 1q
+- [What is named entity recognition (NER) in Azure Language?](https://learn.microsoft.com/azure/ai-services/language-service/named-entity-recognition/overview) — 1q
+- [What's new in Azure Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/whats-new) — 1q
 
 #### Microsoft Copilot Studio — `/microsoft-copilot-studio/` (54 questions, 23 pages)
 
@@ -118,78 +151,52 @@ On your first lookup, open your exam's top two tree roots in separate tabs and l
 - [Test an agent](https://learn.microsoft.com/microsoft-copilot-studio/authoring-test-bot) — 1q
 - [Use system topics](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics) — 1q
 
-#### Azure AI services and Foundry Tools — `/azure/ai-services/` (52 questions, 28 pages)
+#### Azure AI Search — `/azure/search/` (50 questions, 22 pages)
 
-- [Prompt Shields](https://learn.microsoft.com/azure/ai-services/content-safety/concepts/jailbreak-detection) — 6q
-- [Content Understanding document solutions](https://learn.microsoft.com/azure/ai-services/content-understanding/document/overview) — 4q
-- [What is a Content Understanding analyzer?](https://learn.microsoft.com/azure/ai-services/content-understanding/concepts/analyzer-reference) — 4q
-- [Document elements and spans](https://learn.microsoft.com/azure/ai-services/content-understanding/document/elements) — 3q
-- [Batch transcription](https://learn.microsoft.com/azure/ai-services/speech-service/batch-transcription) — 2q
-- [Custom categories in Azure AI Content Safety](https://learn.microsoft.com/azure/ai-services/content-safety/concepts/custom-categories) — 2q
-- [Detect personally identifiable information](https://learn.microsoft.com/azure/ai-services/language-service/personally-identifiable-information/overview) — 2q
-- [Groundedness detection](https://learn.microsoft.com/azure/ai-services/content-safety/concepts/groundedness) — 2q
-- [Language identification with Speech](https://learn.microsoft.com/azure/ai-services/speech-service/language-identification) — 2q
-- [Quickstart: Use Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/quickstart/use-rest-api) — 2q
-- [Speech to text](https://learn.microsoft.com/azure/ai-services/speech-service/speech-to-text) — 2q
-- [Speech translation](https://learn.microsoft.com/azure/ai-services/speech-service/speech-translation) — 2q
-- [What is Azure AI Content Safety?](https://learn.microsoft.com/azure/ai-services/content-safety/overview) — 2q
-- [What is Azure Content Understanding in Foundry Tools?](https://learn.microsoft.com/azure/ai-services/content-understanding/overview) — 2q
-- [What is Azure Translator in Foundry Tools?](https://learn.microsoft.com/azure/ai-services/translator/translator-overview) — 2q
-- [Content Understanding image solutions](https://learn.microsoft.com/azure/ai-services/content-understanding/image/overview) — 1q
-- [Content Understanding video solutions](https://learn.microsoft.com/azure/ai-services/content-understanding/video/overview) — 1q
-- [Custom text classification](https://learn.microsoft.com/azure/ai-services/language-service/custom-text-classification/overview) — 1q
-- [Custom Translator](https://learn.microsoft.com/azure/ai-services/translator/custom-translator/overview) — 1q
-- [Document translation](https://learn.microsoft.com/azure/ai-services/translator/document-translation/overview) — 1q
-- [Fast transcription](https://learn.microsoft.com/azure/ai-services/speech-service/fast-transcription-create) — 1q
-- [Improve recognition accuracy with phrase lists](https://learn.microsoft.com/azure/ai-services/speech-service/improve-accuracy-phrase-list) — 1q
-- [Language detection](https://learn.microsoft.com/azure/ai-services/language-service/language-detection/overview) — 1q
-- [Prebuilt analyzers in Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/concepts/prebuilt-analyzers) — 1q
-- [Real-time diarization](https://learn.microsoft.com/azure/ai-services/speech-service/get-started-stt-diarization) — 1q
-- [Sentiment analysis and opinion mining](https://learn.microsoft.com/azure/ai-services/language-service/sentiment-opinion-mining/overview) — 1q
-- [Speech Synthesis Markup Language](https://learn.microsoft.com/azure/ai-services/speech-service/speech-synthesis-markup) — 1q
-- [What's new in Azure Content Understanding](https://learn.microsoft.com/azure/ai-services/content-understanding/whats-new) — 1q
-
-#### Azure AI Search — `/azure/search/` (37 questions, 22 pages)
-
+- [Security trimming for Azure AI Search](https://learn.microsoft.com/azure/search/search-security-trimming-for-azure-search) — 5q
+- [Hybrid search in Azure AI Search](https://learn.microsoft.com/azure/search/hybrid-search-overview) — 4q
+- [Indexers in Azure AI Search](https://learn.microsoft.com/azure/search/search-indexer-overview) — 4q
 - [Agentic retrieval in Azure AI Search](https://learn.microsoft.com/azure/search/agentic-retrieval-overview) — 3q
-- [Hybrid search in Azure AI Search](https://learn.microsoft.com/azure/search/hybrid-search-overview) — 3q
-- [Indexers in Azure AI Search](https://learn.microsoft.com/azure/search/search-indexer-overview) — 3q
-- [Security trimming for Azure AI Search](https://learn.microsoft.com/azure/search/search-security-trimming-for-azure-search) — 3q
+- [Create a hybrid query](https://learn.microsoft.com/azure/search/hybrid-search-how-to-query) — 3q
+- [Create a vector index](https://learn.microsoft.com/azure/search/vector-search-how-to-create-index) — 3q
+- [Define an index projection](https://learn.microsoft.com/azure/search/search-how-to-define-index-projections) — 3q
+- [Indexer errors and warnings](https://learn.microsoft.com/azure/search/cognitive-search-common-errors-warnings) — 3q
+- [Chunk documents for vector search](https://learn.microsoft.com/azure/search/vector-search-how-to-chunk-documents) — 2q
 - [Configure a vectorizer](https://learn.microsoft.com/azure/search/vector-search-how-to-configure-vectorizer) — 2q
 - [Connect to Azure AI Search using roles](https://learn.microsoft.com/azure/search/search-security-rbac) — 2q
-- [Create a hybrid query](https://learn.microsoft.com/azure/search/hybrid-search-how-to-query) — 2q
-- [Define an index projection](https://learn.microsoft.com/azure/search/search-how-to-define-index-projections) — 2q
-- [Indexer errors and warnings](https://learn.microsoft.com/azure/search/cognitive-search-common-errors-warnings) — 2q
+- [Document Layout skill](https://learn.microsoft.com/azure/search/cognitive-search-skill-document-intelligence-layout) — 2q
 - [Integrated vectorization](https://learn.microsoft.com/azure/search/vector-search-integrated-vectorization) — 2q
+- [Managed identities for indexer connections](https://learn.microsoft.com/azure/search/search-howto-managed-identities-data-sources) — 2q
 - [Multimodal search in Azure AI Search](https://learn.microsoft.com/azure/search/multimodal-search-overview) — 2q
-- [Chunk documents for vector search](https://learn.microsoft.com/azure/search/vector-search-how-to-chunk-documents) — 1q
+- [Schedule an indexer](https://learn.microsoft.com/azure/search/search-howto-schedule-indexers) — 2q
 - [Configure semantic ranking](https://learn.microsoft.com/azure/search/semantic-how-to-configure) — 1q
-- [Create a vector index](https://learn.microsoft.com/azure/search/vector-search-how-to-create-index) — 1q
 - [Create a vector query](https://learn.microsoft.com/azure/search/vector-search-how-to-query) — 1q
-- [Document Layout skill](https://learn.microsoft.com/azure/search/cognitive-search-skill-document-intelligence-layout) — 1q
 - [Filters in Azure AI Search](https://learn.microsoft.com/azure/search/search-filters) — 1q
-- [Managed identities for indexer connections](https://learn.microsoft.com/azure/search/search-howto-managed-identities-data-sources) — 1q
 - [Query types and composition](https://learn.microsoft.com/azure/search/search-query-overview) — 1q
 - [RAG in Azure AI Search](https://learn.microsoft.com/azure/search/retrieval-augmented-generation-overview) — 1q
-- [Schedule an indexer](https://learn.microsoft.com/azure/search/search-howto-schedule-indexers) — 1q
 - [Semantic ranking in Azure AI Search](https://learn.microsoft.com/azure/search/semantic-search-overview) — 1q
 
-#### Cloud Adoption Framework — `/azure/cloud-adoption-framework/` (7 questions, 2 pages)
+#### Cloud Adoption Framework — `/azure/cloud-adoption-framework/` (9 questions, 2 pages)
 
-- [Process to build agents across your organization](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/build-secure-process) — 5q
-- [Governance and security for AI agents](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/governance-security-across-organization) — 2q
+- [Process to build agents across your organization](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/build-secure-process) — 6q
+- [Governance and security for AI agents](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/governance-security-across-organization) — 3q
+
+#### Microsoft Agent Framework — `/agent-framework/` (7 questions, 2 pages)
+
+- [Foundry Agent Service in Agent Framework](https://learn.microsoft.com/agent-framework/integrations/by-component/agent-services/foundry) — 5q
+- [Workflow orchestrations](https://learn.microsoft.com/agent-framework/workflows/orchestrations/) — 2q
 
 #### Foundry (classic paths) — `/azure/ai-foundry/` (5 questions, 1 pages)
 
 - [Configure content filters](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/content-filters) — 5q
 
-#### Microsoft Agent Framework — `/agent-framework/` (5 questions, 1 pages)
-
-- [Foundry Agent Service in Agent Framework](https://learn.microsoft.com/agent-framework/integrations/by-component/agent-services/foundry) — 5q
-
 #### Azure Storage — `/azure/storage/` (2 questions, 1 pages)
 
 - [Create a user delegation SAS](https://learn.microsoft.com/azure/storage/blobs/storage-blob-user-delegation-sas-create-cli) — 2q
+
+#### azure/private-link — `/azure/private-link/` (2 questions, 1 pages)
+
+- [Azure Private Endpoint private DNS zone values](https://learn.microsoft.com/azure/private-link/private-endpoint-dns) — 2q
 
 #### Power Apps — `/power-apps/` (2 questions, 1 pages)
 
@@ -197,7 +204,7 @@ On your first lookup, open your exam's top two tree roots in separate tabs and l
 
 ## AB-100 — Agentic AI Business Solutions Architect
 
-248 questions cite 57 pages across 12 documentation trees. The first 6 carry 88% of them.
+336 questions cite 62 pages across 13 documentation trees. The first 6 carry 87% of them.
 
 ### Fast paths
 
@@ -214,98 +221,106 @@ On your first lookup, open your exam's top two tree roots in separate tabs and l
 
 ### Trees
 
-#### Microsoft Copilot Studio — `/microsoft-copilot-studio/` (76 questions, 17 pages)
+#### Microsoft Copilot Studio — `/microsoft-copilot-studio/` (105 questions, 20 pages)
 
-- [Prompts in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/prompts-overview) — 12q
-- [About agent evaluation](https://learn.microsoft.com/microsoft-copilot-studio/analytics-agent-evaluation-intro) — 10q
-- [Copilot Studio analytics overview](https://learn.microsoft.com/microsoft-copilot-studio/analytics-overview) — 10q
-- [Agent flows overview](https://learn.microsoft.com/microsoft-copilot-studio/flows-overview) — 7q
-- [Knowledge sources in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio) — 5q
-- [Computer use in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/computer-use) — 4q
-- [Copilot Studio security and governance](https://learn.microsoft.com/microsoft-copilot-studio/security-and-governance) — 4q
-- [Design autonomous agent capabilities](https://learn.microsoft.com/microsoft-copilot-studio/guidance/autonomous-agents) — 3q
-- [Extend an agent with Model Context Protocol](https://learn.microsoft.com/microsoft-copilot-studio/agent-extend-action-mcp) — 3q
-- [Generative orchestration in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/advanced-generative-actions) — 3q
-- [Multi-agent orchestration patterns](https://learn.microsoft.com/microsoft-copilot-studio/guidance/multi-agent-patterns) — 3q
+- [Prompts in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/prompts-overview) — 16q
+- [About agent evaluation](https://learn.microsoft.com/microsoft-copilot-studio/analytics-agent-evaluation-intro) — 12q
+- [Copilot Studio analytics overview](https://learn.microsoft.com/microsoft-copilot-studio/analytics-overview) — 11q
+- [Agent flows overview](https://learn.microsoft.com/microsoft-copilot-studio/flows-overview) — 8q
+- [Computer use in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/computer-use) — 7q
+- [Copilot Studio security and governance](https://learn.microsoft.com/microsoft-copilot-studio/security-and-governance) — 7q
+- [Knowledge sources in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio) — 7q
+- [Design autonomous agent capabilities](https://learn.microsoft.com/microsoft-copilot-studio/guidance/autonomous-agents) — 4q
+- [Extend an agent with Model Context Protocol](https://learn.microsoft.com/microsoft-copilot-studio/agent-extend-action-mcp) — 4q
+- [Generative orchestration in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/advanced-generative-actions) — 4q
+- [Multi-agent orchestration patterns](https://learn.microsoft.com/microsoft-copilot-studio/guidance/multi-agent-patterns) — 4q
+- [Voice-enabled agents in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/voice-overview) — 4q
 - [Solutions and ALM in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/authoring-solutions-overview) — 3q
-- [Voice-enabled agents in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/voice-overview) — 3q
+- [Use system topics](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics) — 3q
+- [Choose evaluation methods](https://learn.microsoft.com/microsoft-copilot-studio/analytics-agent-evaluation-overview) — 2q
 - [Configure data policies for agents](https://learn.microsoft.com/microsoft-copilot-studio/admin-data-loss-prevention) — 2q
-- [Use system topics](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics) — 2q
-- [Copilot Studio capacity and message management](https://learn.microsoft.com/microsoft-copilot-studio/requirements-messages-management) — 1q
-- [Use tools with custom agents](https://learn.microsoft.com/microsoft-copilot-studio/add-tools-custom-agent) — 1q
+- [Copilot Studio capacity and message management](https://learn.microsoft.com/microsoft-copilot-studio/requirements-messages-management) — 2q
+- [Monitor user questions by theme](https://learn.microsoft.com/microsoft-copilot-studio/analytics-themes) — 2q
+- [Use tools with custom agents](https://learn.microsoft.com/microsoft-copilot-studio/add-tools-custom-agent) — 2q
+- [Configure user authentication](https://learn.microsoft.com/microsoft-copilot-studio/configuration-end-user-authentication) — 1q
 
-#### Microsoft Foundry — `/azure/foundry/` (35 questions, 8 pages)
+#### Microsoft Foundry — `/azure/foundry/` (46 questions, 8 pages)
 
-- [Plan and manage costs for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/manage-costs) — 9q
-- [Built-in evaluators reference](https://learn.microsoft.com/azure/foundry/concepts/built-in-evaluators) — 7q
-- [What is Foundry IQ?](https://learn.microsoft.com/azure/foundry/agents/concepts/what-is-foundry-iq) — 7q
-- [Monitor agents with the Agent Monitoring Dashboard](https://learn.microsoft.com/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard) — 5q
-- [Model router for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/openai/concepts/model-router) — 3q
-- [Role-based access control for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry) — 2q
+- [Plan and manage costs for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/manage-costs) — 11q
+- [Built-in evaluators reference](https://learn.microsoft.com/azure/foundry/concepts/built-in-evaluators) — 9q
+- [What is Foundry IQ?](https://learn.microsoft.com/azure/foundry/agents/concepts/what-is-foundry-iq) — 9q
+- [Monitor agents with the Agent Monitoring Dashboard](https://learn.microsoft.com/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard) — 7q
+- [Model router for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/openai/concepts/model-router) — 4q
+- [Role-based access control for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry) — 3q
+- [Microsoft Foundry Agent Service](https://learn.microsoft.com/azure/foundry/agents/overview) — 2q
 - [Deployment types for Microsoft Foundry Models](https://learn.microsoft.com/azure/foundry/foundry-models/concepts/deployment-types) — 1q
-- [Microsoft Foundry Agent Service](https://learn.microsoft.com/azure/foundry/agents/overview) — 1q
 
-#### Cloud Adoption Framework — `/azure/cloud-adoption-framework/` (32 questions, 6 pages)
+#### Power Platform — `/power-platform/` (44 questions, 12 pages)
 
-- [Governance and security for AI agents](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/governance-security-across-organization) — 16q
-- [Data architecture for AI agents](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/data-architecture-plan) — 8q
-- [Process to build agents across your organization](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/build-secure-process) — 3q
-- [AI adoption in the Cloud Adoption Framework](https://learn.microsoft.com/azure/cloud-adoption-framework/scenarios/ai/) — 2q
-- [AI adoption: Strategy](https://learn.microsoft.com/azure/cloud-adoption-framework/scenarios/ai/strategy) — 2q
-- [Organizational readiness for AI agents](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/organization-people-readiness-plan) — 1q
-
-#### Dynamics 365 — `/dynamics365/` (32 questions, 6 pages)
-
-- [Agents, Copilot, and AI capabilities in Dynamics 365 apps](https://learn.microsoft.com/dynamics365/copilot/ai-get-started) — 10q
-- [Configure Copilot features in Customer Service](https://learn.microsoft.com/dynamics365/customer-service/administer/configure-copilot-features) — 7q
-- [Copilot in finance and operations apps](https://learn.microsoft.com/dynamics365/fin-ops-core/fin-ops/copilot/copilot-for-finance-operations) — 5q
-- [Generative help and guidance with Copilot](https://learn.microsoft.com/dynamics365/fin-ops-core/fin-ops/copilot/copilot-generative-help) — 4q
-- [Use Copilot to ask a question in Contact Center](https://learn.microsoft.com/dynamics365/contact-center/use/use-ask-a-question) — 4q
-- [Copilot in Dynamics 365 Sales](https://learn.microsoft.com/dynamics365/sales/copilot-overview) — 2q
-
-#### Power Platform — `/power-platform/` (30 questions, 12 pages)
-
-- [Pipelines in Power Platform](https://learn.microsoft.com/power-platform/alm/pipelines) — 5q
-- [Application lifecycle management in Power Platform](https://learn.microsoft.com/power-platform/alm/overview-alm) — 4q
-- [Dataverse security concepts](https://learn.microsoft.com/power-platform/admin/wp-security-cds) — 4q
-- [Intelligent application workload](https://learn.microsoft.com/power-platform/well-architected/intelligent-application/) — 4q
-- [Well-Architected reliability pillar](https://learn.microsoft.com/power-platform/well-architected/reliability/) — 3q
-- [Center of Excellence starter kit](https://learn.microsoft.com/power-platform/guidance/coe/starter-kit) — 2q
-- [Environment strategy](https://learn.microsoft.com/power-platform/guidance/adoption/environment-strategy) — 2q
+- [Pipelines in Power Platform](https://learn.microsoft.com/power-platform/alm/pipelines) — 7q
+- [Dataverse security concepts](https://learn.microsoft.com/power-platform/admin/wp-security-cds) — 6q
+- [Intelligent application workload](https://learn.microsoft.com/power-platform/well-architected/intelligent-application/) — 6q
+- [Application lifecycle management in Power Platform](https://learn.microsoft.com/power-platform/alm/overview-alm) — 5q
+- [Well-Architected reliability pillar](https://learn.microsoft.com/power-platform/well-architected/reliability/) — 4q
+- [Center of Excellence starter kit](https://learn.microsoft.com/power-platform/guidance/coe/starter-kit) — 3q
+- [Data loss prevention policies](https://learn.microsoft.com/power-platform/admin/wp-data-loss-prevention) — 3q
+- [Environment strategy](https://learn.microsoft.com/power-platform/guidance/adoption/environment-strategy) — 3q
+- [Managed Environments overview](https://learn.microsoft.com/power-platform/admin/managed-environment-overview) — 2q
+- [Power Platform adoption methodology](https://learn.microsoft.com/power-platform/guidance/adoption/methodology) — 2q
 - [Track, manage, and scale Copilot adoption](https://learn.microsoft.com/power-platform/admin/copilot/copilot-hub) — 2q
-- [Data loss prevention policies](https://learn.microsoft.com/power-platform/admin/wp-data-loss-prevention) — 1q
-- [Managed Environments overview](https://learn.microsoft.com/power-platform/admin/managed-environment-overview) — 1q
-- [Power Platform adoption methodology](https://learn.microsoft.com/power-platform/guidance/adoption/methodology) — 1q
 - [Power Platform Well-Architected](https://learn.microsoft.com/power-platform/well-architected/) — 1q
 
-#### Microsoft Purview — `/purview/` (12 questions, 1 pages)
+#### Cloud Adoption Framework — `/azure/cloud-adoption-framework/` (43 questions, 6 pages)
 
-- [Microsoft Purview for AI](https://learn.microsoft.com/purview/ai-microsoft-purview) — 12q
+- [Governance and security for AI agents](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/governance-security-across-organization) — 20q
+- [Data architecture for AI agents](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/data-architecture-plan) — 11q
+- [Process to build agents across your organization](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/build-secure-process) — 5q
+- [AI adoption in the Cloud Adoption Framework](https://learn.microsoft.com/azure/cloud-adoption-framework/scenarios/ai/) — 3q
+- [AI adoption: Strategy](https://learn.microsoft.com/azure/cloud-adoption-framework/scenarios/ai/strategy) — 3q
+- [Organizational readiness for AI agents](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/organization-people-readiness-plan) — 1q
 
-#### Microsoft 365 Copilot extensibility — `/microsoft-365-copilot/` (10 questions, 2 pages)
+#### Dynamics 365 — `/dynamics365/` (40 questions, 7 pages)
 
-- [Agents are apps for Microsoft 365](https://learn.microsoft.com/microsoft-365-copilot/extensibility/agents-are-apps) — 5q
-- [Microsoft 365 Copilot extensibility](https://learn.microsoft.com/microsoft-365-copilot/extensibility/) — 5q
+- [Agents, Copilot, and AI capabilities in Dynamics 365 apps](https://learn.microsoft.com/dynamics365/copilot/ai-get-started) — 13q
+- [Configure Copilot features in Customer Service](https://learn.microsoft.com/dynamics365/customer-service/administer/configure-copilot-features) — 9q
+- [Copilot in finance and operations apps](https://learn.microsoft.com/dynamics365/fin-ops-core/fin-ops/copilot/copilot-for-finance-operations) — 5q
+- [Generative help and guidance with Copilot](https://learn.microsoft.com/dynamics365/fin-ops-core/fin-ops/copilot/copilot-generative-help) — 5q
+- [Use Copilot to ask a question in Contact Center](https://learn.microsoft.com/dynamics365/contact-center/use/use-ask-a-question) — 5q
+- [Copilot in Dynamics 365 Sales](https://learn.microsoft.com/dynamics365/sales/copilot-overview) — 2q
+- [Procurement Agent overview](https://learn.microsoft.com/dynamics365/supply-chain/procurement/procurement-agent-overview) — 1q
 
-#### Foundry (classic paths) — `/azure/ai-foundry/` (9 questions, 1 pages)
+#### Microsoft Purview — `/purview/` (15 questions, 1 pages)
 
-- [Fine-tuning in Microsoft Foundry](https://learn.microsoft.com/azure/ai-foundry/concepts/fine-tuning-overview) — 9q
+- [Microsoft Purview for AI](https://learn.microsoft.com/purview/ai-microsoft-purview) — 15q
 
-#### Azure Well-Architected Framework — `/azure/well-architected/` (5 questions, 1 pages)
+#### Foundry (classic paths) — `/azure/ai-foundry/` (13 questions, 1 pages)
 
-- [Responsible AI in the Well-Architected Framework](https://learn.microsoft.com/azure/well-architected/ai/responsible-ai) — 5q
+- [Fine-tuning in Microsoft Foundry](https://learn.microsoft.com/azure/ai-foundry/concepts/fine-tuning-overview) — 13q
 
-#### AI Builder — `/ai-builder/` (3 questions, 1 pages)
+#### Microsoft 365 Copilot extensibility — `/microsoft-365-copilot/` (12 questions, 2 pages)
 
-- [AI Builder overview](https://learn.microsoft.com/ai-builder/overview) — 3q
+- [Agents are apps for Microsoft 365](https://learn.microsoft.com/microsoft-365-copilot/extensibility/agents-are-apps) — 6q
+- [Microsoft 365 Copilot extensibility](https://learn.microsoft.com/microsoft-365-copilot/extensibility/) — 6q
+
+#### Azure Well-Architected Framework — `/azure/well-architected/` (7 questions, 1 pages)
+
+- [Responsible AI in the Well-Architected Framework](https://learn.microsoft.com/azure/well-architected/ai/responsible-ai) — 7q
+
+#### AI Builder — `/ai-builder/` (5 questions, 1 pages)
+
+- [AI Builder overview](https://learn.microsoft.com/ai-builder/overview) — 5q
+
+#### Microsoft 365 Copilot for Sales — `/microsoft-sales-copilot/` (3 questions, 1 pages)
+
+- [Microsoft 365 Copilot for Sales](https://learn.microsoft.com/microsoft-sales-copilot/introduction) — 3q
 
 #### Microsoft 365 Copilot for Service — `/microsoft-copilot-service/` (2 questions, 1 pages)
 
 - [Microsoft 365 Copilot for Service](https://learn.microsoft.com/microsoft-copilot-service/copilot-ask-a-question) — 2q
 
-#### Microsoft 365 Copilot for Sales — `/microsoft-sales-copilot/` (2 questions, 1 pages)
+#### microsoft-365 — `/microsoft-365/` (1 questions, 1 pages)
 
-- [Microsoft 365 Copilot for Sales](https://learn.microsoft.com/microsoft-sales-copilot/introduction) — 2q
+- [Share and manage agents](https://learn.microsoft.com/microsoft-365/copilot/extensibility/agent-builder-share-manage-agents) — 1q
 
 ## Do not bother
 

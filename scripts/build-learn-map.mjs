@@ -4,18 +4,10 @@
 //
 //   npm run build:learn-map
 import { writeFileSync, mkdirSync } from "node:fs";
-import { ADVANCED_QUESTIONS } from "../lib/advanced-questions.ts";
-import { CLAUDE_QUESTIONS } from "../lib/claude-questions.ts";
-import { AB100_QUESTIONS } from "../lib/ab100-questions.ts";
-import { withReferences } from "../lib/question-references.ts";
-import { COPILOT_STUDIO_QUESTIONS as RAW_COPILOT, FOUNDRY_SDK_QUESTIONS as RAW_SDK } from "../lib/specialty-questions.ts";
+// The composed banks from lib/questions.ts, so the map covers exactly what ships.
+import { AB100_QUESTIONS, CLAUDE_QUESTIONS, COPILOT_STUDIO_QUESTIONS, CORE_QUESTIONS, FOUNDRY_SDK_QUESTIONS } from "../lib/questions.ts";
 
-const AI103 = [
-  ...withReferences(ADVANCED_QUESTIONS),
-  ...withReferences(RAW_SDK),
-  ...withReferences(RAW_COPILOT),
-  ...CLAUDE_QUESTIONS,
-];
+const AI103 = [...CORE_QUESTIONS, ...FOUNDRY_SDK_QUESTIONS, ...COPILOT_STUDIO_QUESTIONS, ...CLAUDE_QUESTIONS];
 
 // Friendly names for each documentation tree the banks cite.
 const TREE_LABELS = {
